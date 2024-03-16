@@ -1,10 +1,11 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
+import { userDTO } from "./models";
 
 type User = {
   id: number,
   name: string
 }
-const USERS: User[] = [
+const users: User[] = [
   { id: 1, name: "Rico" },
   { id: 2, name: "Vic" },
   { id: 3, name: "Nico" },
@@ -17,11 +18,23 @@ const userPlugin = new Elysia();
 
 userPlugin.group("/users", (app) => app
   .get('/', () => ({
-    data: USERS 
+    data: users 
   }))
   .get('/:id', ({ params: { id } }) => ({
-    data: USERS.find(user => user.id == Number(id))
+    data: users.find(user => user.id == Number(id))
   }))
+  .post('/', ({ body, set }) => {
+    const newUser: User = {
+      id: users.length + 1,
+      name: body.name
+    }
+    users.push(newUser);
+
+    set.status = 201;
+    return users;
+  }, {
+    body: userDTO
+  }),
 );
 
 export default userPlugin;
