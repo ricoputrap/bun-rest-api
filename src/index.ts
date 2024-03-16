@@ -1,6 +1,8 @@
 import { Elysia } from "elysia";
+import userPlugin from "./users";
 
 const app = new Elysia()
+  .use(userPlugin)
   .state('version', 1)
   .decorate('getDate', () => Date.now())
   .get("/", () => "Hello Elysia")
