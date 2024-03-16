@@ -1,25 +1,17 @@
 import { Elysia } from "elysia";
 import userPlugin from "./users";
+import postPlugin from "./posts";
 
 const app = new Elysia()
   .use(userPlugin)
+  .use(postPlugin)
   .state('version', 1)
   .decorate('getDate', () => Date.now())
-  .get("/", () => "Hello Elysia")
-  .get("/posts", ({ store, getDate }) => ({
-    data: [
-      { id: 1, title: "Post 1" },
-      { id: 2, title: "Post 2" },
-      { id: 3, title: "Post 3" },
-    ],
+  .get("/", ({ store, getDate }) => ({
     version: store.version,
-    date: getDate()
+    date: getDate(),
+    text: "Hello, Elysia!"
   }))
-  .get("/posts/:id", ({ params: { id } }) => { return { id } })
-  .post("/posts", ({ body, set }) => {
-    set.status = 201;
-    return body;
-  })
   .listen(3000);
 
 console.log(

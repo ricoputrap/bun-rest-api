@@ -13,13 +13,15 @@ const USERS: User[] = [
 ];
 
 // define plugin
-const userPlugin = new Elysia()
-  .state('plugin-version', 1)
-  .get('/users', () => ({
+const userPlugin = new Elysia();
+
+userPlugin.group("/users", (app) => app
+  .get('/', () => ({
     data: USERS 
   }))
-  .get('/users/:id', ({ params: { id } }) => ({
+  .get('/:id', ({ params: { id } }) => ({
     data: USERS.find(user => user.id == Number(id))
-  }));
+  }))
+);
 
 export default userPlugin;
